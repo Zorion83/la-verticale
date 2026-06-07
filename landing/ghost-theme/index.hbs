@@ -12,11 +12,14 @@
 <body>
 
   <!-- ══ NAV ══════════════════════════════════════════════════════ -->
-  <nav aria-label="Navigation principale">
+  <nav>
     <div class="nav-inner">
       <a href="{{@site.url}}" class="nav-logo">La <span>Verticale</span></a>
       <div class="nav-right">
-        <a href="{{@site.url}}/articles/" class="nav-link">Articles</a>
+        <a href="{{@site.url}}/tag/guide/" class="nav-link">Guide</a>
+        <a href="{{@site.url}}/tag/bourse/" class="nav-link">Bourse</a>
+        <a href="{{@site.url}}/tag/outils/" class="nav-link">Outils</a>
+        <a href="{{@site.url}}/tag/article/" class="nav-link">Article</a>
         <a href="#cta-final" class="nav-cta">S'abonner</a>
       </div>
     </div>
@@ -27,17 +30,86 @@
   <section id="hero">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-eyebrow reveal">Newsletter Crypto · Éco · IA</div>
+        <div class="hero-eyebrow reveal">Newsletter Finance · Crypto · IA · Du lundi au vendredi</div>
+
         <h1 class="hero-title reveal reveal-delay-1">
           La <span class="gold">Verticale</span>
         </h1>
+
+        <p class="hero-tagline-main reveal reveal-delay-2">5 minutes par jour pour ne rien manquer.</p>
+
         <p class="hero-tagline reveal reveal-delay-2">
-          <strong>L'actu qui rapporte.</strong><br>
-          Crypto, macro et IA décryptés chaque semaine pour ceux qui veulent comprendre avant les autres.
+          La newsletter finance pour particuliers et professionnels qui veulent une longueur d'avance sur crypto, macro et IA.
         </p>
+
+        <div class="hero-topics reveal reveal-delay-2">
+          <span class="topic-pill">📊 Crypto</span>
+          <span class="topic-pill">📈 Macro</span>
+          <span class="topic-pill">🤖 IA</span>
+        </div>
+
         <div class="hero-actions reveal reveal-delay-3">
           <a href="#cta-final" class="btn-primary">Je m'abonne gratuitement →</a>
-          <p class="hero-sub">Gratuit · Sans spam · <span>Chaque semaine</span></p>
+          <p class="hero-sub">Gratuit · Sans spam · <span>Chaque matin</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ TABS NAV ══════════════════════════════════════════════════ -->
+  <section id="tabs-nav">
+    <div class="container">
+      <div class="tabs-grid">
+        <a href="{{@site.url}}/tag/guide/" class="tab-card reveal">
+          <div class="tab-icon">📘</div>
+          <div class="tab-title">Guide</div>
+          <p class="tab-desc">Les bases de la finance, crypto et macroéco expliquées simplement.</p>
+          <span class="tab-link">Voir les guides →</span>
+        </a>
+        <a href="{{@site.url}}/tag/bourse/" class="tab-card reveal reveal-delay-1">
+          <div class="tab-icon">📈</div>
+          <div class="tab-title">Bourse</div>
+          <p class="tab-desc">Analyses de marchés, secteurs porteurs et stratégies d'investissement.</p>
+          <span class="tab-link">Voir les analyses →</span>
+        </a>
+        <a href="{{@site.url}}/tag/outils/" class="tab-card reveal reveal-delay-2">
+          <div class="tab-icon">🛠️</div>
+          <div class="tab-title">Outils</div>
+          <p class="tab-desc">Calculateurs, screeners et ressources pour prendre de meilleures décisions.</p>
+          <span class="tab-link">Voir les outils →</span>
+        </a>
+        <a href="{{@site.url}}/tag/article/" class="tab-card reveal reveal-delay-3">
+          <div class="tab-icon">📰</div>
+          <div class="tab-title">Article</div>
+          <p class="tab-desc">Analyses approfondies sur crypto, macro et IA pour aller plus loin.</p>
+          <span class="tab-link">Voir les articles →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ PAIN POINTS ══════════════════════════════════════════════ -->
+  <section id="pain">
+    <div class="container">
+      <span class="section-label reveal">Ça te parle ?</span>
+      <h2 class="section-title reveal">Arrête de subir l'info financière.</h2>
+      <div class="pain-grid">
+        <div class="pain-card reveal">
+          <div class="pain-icon">😵‍💫</div>
+          <h3>Trop d'info, pas assez de signal</h3>
+          <p>Twitter, LinkedIn, YouTube... tu passes des heures à consommer sans savoir quoi en faire.</p>
+        </div>
+        <div class="pain-card reveal reveal-delay-1">
+          <div class="pain-icon">📉</div>
+          <h3>Tu rates les mouvements qui comptent</h3>
+          <p>BTC qui explose, une macro qui change, une régulation clé — tu l'apprends souvent trop tard.</p>
+        </div>
+        <div class="pain-card reveal reveal-delay-2">
+          <div class="pain-icon">🤯</div>
+          <h3>La crypto et l'IA évoluent trop vite</h3>
+          <p>Chaque semaine un nouveau projet, un nouveau modèle. Difficile de garder une vision claire.</p>
         </div>
       </div>
     </div>
@@ -45,23 +117,25 @@
 
 
   <!-- ══ PROMISE ══════════════════════════════════════════════════ -->
-  <section id="promise" aria-label="Promesse éditoriale">
+  <section id="promise">
     <div class="container">
+      <span class="section-label reveal">La solution</span>
+      <h2 class="section-title reveal">5 minutes. 3 signaux. Une longueur d'avance.</h2>
       <div class="promise-grid">
         <div class="promise-card reveal">
-          <div class="promise-icon" aria-hidden="true">⛰️</div>
-          <div class="promise-label">Chaque semaine</div>
+          <div class="promise-icon">⛰️</div>
+          <div class="promise-label">Chaque matin</div>
           <div class="promise-title">1 signal actionnable</div>
-          <p class="promise-desc">Un mouvement de marché, une tendance crypto, un fait macro — décortiqué et mis en perspective pour que tu puisses agir.</p>
+          <p class="promise-desc">Un mouvement de marché, une tendance crypto, un fait macro — décortiqué pour que tu puisses agir.</p>
         </div>
         <div class="promise-card reveal reveal-delay-1">
-          <div class="promise-icon" aria-hidden="true">📡</div>
+          <div class="promise-icon">📡</div>
           <div class="promise-label">L'essentiel filtré</div>
           <div class="promise-title">3 news actionnables</div>
           <p class="promise-desc">Les signaux qui comptent, sans le bruit. Crypto, macro, IA — seulement ce qui impacte ta vision.</p>
         </div>
         <div class="promise-card reveal reveal-delay-2">
-          <div class="promise-icon" aria-hidden="true">🛠️</div>
+          <div class="promise-icon">🛠️</div>
           <div class="promise-label">Gain de temps</div>
           <div class="promise-title">1 outil ou analyse</div>
           <p class="promise-desc">Un graphique, un outil d'analyse, une ressource libre — quelque chose d'utilisable dans la journée.</p>
@@ -76,7 +150,7 @@
   <section id="articles">
     <div class="container">
       <span class="section-label reveal">Dernières analyses</span>
-      <h2 class="section-title reveal">Ce qu'on décrypte cette semaine</h2>
+      <h2 class="section-title reveal">Ce qu'on décrypte en ce moment</h2>
       <div class="posts-grid">
         {{#foreach posts limit="3"}}
         <article class="post-card reveal">
@@ -105,7 +179,9 @@
   {{/if}}
 
 
-  <!-- ══ CONTENT ══════════════════════════════════════════════════ -->
+
+
+  <!-- ══ CONTENT / TIERS ══════════════════════════════════════════ -->
   <section id="content">
     <div class="container">
       <span class="section-label reveal">Ce que tu reçois</span>
@@ -114,13 +190,13 @@
       <div class="content-tiers">
         <div class="tier-card reveal">
           <span class="tier-badge free">Gratuit</span>
-          <div class="tier-title">L'essentiel chaque semaine</div>
+          <div class="tier-title">L'essentiel chaque matin</div>
           <ul class="tier-list">
-            <li><strong>Le signal de la semaine</strong> — résumé en 3 minutes</li>
+            <li><strong>Le signal du jour</strong> — résumé en 3 minutes</li>
             <li><strong>3 news actionnables</strong> triées sur le volet</li>
             <li><strong>1 outil ou analyse</strong> immédiatement utilisable</li>
-            <li><strong>Le chiffre de la semaine</strong> — le contexte macro qui compte</li>
-            <li>Accès aux articles éducatifs</li>
+            <li><strong>Le chiffre du jour</strong> — le contexte macro qui compte</li>
+            <li>Accès aux guides et articles éducatifs</li>
           </ul>
         </div>
         <div class="tier-card premium reveal reveal-delay-1">
@@ -129,40 +205,11 @@
           <ul class="tier-list">
             <li>Tout le contenu gratuit, plus :</li>
             <li><strong>Analyses approfondies</strong> — chiffres, risques, scénarios</li>
-            <li><strong>Outil d'analyse premium</strong> — dashboards et screeners</li>
+            <li><strong>Outil d'analyse premium</strong> — dashboards et screeners <span style="font-size:0.75rem;color:var(--gold);opacity:0.8;">(bientôt)</span></li>
             <li><strong>Archives complètes</strong> — toutes les analyses passées</li>
             <li><strong>Canal privé</strong> — échanges entre lecteurs actifs</li>
             <li><strong>Q&amp;A mensuel</strong> en direct</li>
           </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══ SOCIAL PROOF ═════════════════════════════════════════════ -->
-  <section id="proof" aria-label="Preuves sociales">
-    <div class="container">
-      <div class="proof-number reveal">2 400+</div>
-      <p class="proof-label reveal">lecteurs nous rejoignent chaque semaine</p>
-      <div class="proof-testimonials">
-        <div class="testimonial reveal">
-          <div class="testimonial-stars" aria-label="5 étoiles">★★★★★</div>
-          <p class="testimonial-text">"La seule newsletter finance que je lis jusqu'au bout. Dense, honnête, actionnable. C'est rare."</p>
-          <div class="testimonial-author">Thomas R.</div>
-          <div class="testimonial-role">Consultant indépendant, Lyon</div>
-        </div>
-        <div class="testimonial reveal reveal-delay-1">
-          <div class="testimonial-stars" aria-label="5 étoiles">★★★★★</div>
-          <p class="testimonial-text">"J'ai utilisé l'analyse crypto du numéro 12 pour repositionner une partie de mon portefeuille. Merci."</p>
-          <div class="testimonial-author">Camille D.</div>
-          <div class="testimonial-role">Fondatrice, e-commerce</div>
-        </div>
-        <div class="testimonial reveal reveal-delay-2">
-          <div class="testimonial-stars" aria-label="5 étoiles">★★★★★</div>
-          <p class="testimonial-text">"Le rapport signal/bruit est imbattable. En 10 minutes par semaine je suis mieux informé qu'avant en 2h."</p>
-          <div class="testimonial-author">Alexis M.</div>
-          <div class="testimonial-role">Développeur freelance, Paris</div>
         </div>
       </div>
     </div>
@@ -174,24 +221,32 @@
     <div class="container">
       <div class="cta-box reveal">
         <span class="section-label">Rejoins La Verticale</span>
-        <h2 class="section-title">L'actu qui rapporte,<br>dans ta boîte chaque semaine.</h2>
-        <p class="section-sub">Gratuit. Sans engagement. Tu te désinscrits en un clic.</p>
-        <div class="beehiiv-wrapper">
-          {{#if @member}}
-            <p class="form-success" style="display:block;">✓ Tu es déjà abonné(e). Merci !</p>
-          {{else}}
-            <form data-members-form="subscribe" class="fallback-form">
-              <input type="email" data-members-email placeholder="ton@email.com" autocomplete="email" aria-label="Adresse e-mail" required />
-              <button type="submit">Je m'abonne →</button>
-            </form>
-            <p data-members-error style="display:none;" class="form-error"></p>
-            <p data-members-success style="display:none;" class="form-success">✓ Parfait ! Vérifie ta boîte mail pour confirmer.</p>
-            <p class="cta-fine">
-              En t'abonnant tu acceptes de recevoir La Verticale chaque semaine.
-              Désabonnement possible à tout moment en un clic.
-            </p>
-          {{/if}}
-        </div>
+        <h2 class="section-title">5 minutes par jour<br>pour ne rien manquer.</h2>
+        <p class="section-sub">Commence gratuitement. Passe Premium quand tu veux aller plus loin.</p>
+
+        {{#if @member}}
+          <p class="form-success" style="display:block;text-align:center;">✓ Tu es déjà abonné(e). Merci !</p>
+        {{else}}
+          <!-- Double CTA Free + Premium -->
+          <div class="cta-dual">
+            <div class="cta-free">
+              <form data-members-form="subscribe" class="fallback-form">
+                <input type="email" data-members-email placeholder="ton@email.com" autocomplete="email" aria-label="Adresse e-mail" required />
+                <button type="submit">Commencer gratuitement →</button>
+              </form>
+              <p data-members-error style="display:none;" class="form-error"></p>
+              <p data-members-success style="display:none;" class="form-success">✓ Parfait ! Vérifie ta boîte mail pour confirmer.</p>
+              <p class="cta-fine">Gratuit · Sans spam · Désabonnement en un clic</p>
+            </div>
+            <div class="cta-divider">
+              <span>ou</span>
+            </div>
+            <div class="cta-premium">
+              <a href="#content" class="btn-premium">Voir le Premium →</a>
+              <p class="cta-fine">Analyses approfondies · Outil d'analyse · Canal privé</p>
+            </div>
+          </div>
+        {{/if}}
       </div>
     </div>
   </section>
@@ -201,20 +256,20 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-logo">La <span>Verticale</span></div>
-      <nav class="footer-links" aria-label="Liens footer">
-        <a href="{{@site.url}}/articles/">Articles</a>
+      <nav class="footer-links">
+        <a href="{{@site.url}}/tag/guide/">Guide</a>
+        <a href="{{@site.url}}/tag/bourse/">Bourse</a>
+        <a href="{{@site.url}}/tag/outils/">Outils</a>
+        <a href="{{@site.url}}/tag/article/">Article</a>
         <a href="#">Mentions légales</a>
-        <a href="#">Politique de confidentialité</a>
         <a href="#">Contact</a>
       </nav>
       <p class="footer-copy">© {{date format="YYYY"}} La Verticale · Tous droits réservés</p>
     </div>
   </footer>
 
-
   {{portal}}
   {{ghost_foot}}
   <script src="{{asset "js/main.js"}}"></script>
-
 </body>
 </html>
