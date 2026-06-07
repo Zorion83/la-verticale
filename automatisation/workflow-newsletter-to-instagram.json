@@ -1,0 +1,231 @@
+{
+  "name": "La Verticale — Newsletter → Instagram",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-manual",
+      "name": "Déclencheur Manuel",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "beehiiv-newsletter-sent",
+        "options": {}
+      },
+      "id": "webhook-beehiiv",
+      "name": "Webhook Beehiiv (optionnel)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 480],
+      "notes": "Alternative au déclencheur manuel : configurez ce webhook dans Beehiiv (Settings > Integrations > Webhooks) pour déclencher automatiquement le workflow à chaque envoi de newsletter."
+    },
+    {
+      "parameters": {
+        "url": "https://www.beehiiv.com/p/VOTRE_SLUG_EDITION_ICI",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "fetch-newsletter",
+      "name": "Récupérer Dernière Édition Beehiiv",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "notes": "Remplacez VOTRE_SLUG_EDITION_ICI par le slug de votre dernière édition Beehiiv (ex: edition-42-le-marche-immobilier). Vous pouvez aussi récupérer dynamiquement le slug depuis le payload Beehiiv si vous utilisez le webhook."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraction du texte principal depuis le HTML Beehiiv\nconst html = $input.first().json.data || $input.first().json;\n\nlet textContent = '';\nif (typeof html === 'string') {\n  textContent = html\n    .replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '')\n    .replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim()\n    .substring(0, 3000);\n} else {\n  textContent = JSON.stringify(html).substring(0, 3000);\n}\n\nif (!textContent || textContent.length < 50) {\n  throw new Error('Contenu newsletter trop court ou vide. Vérifiez l\\'URL Beehiiv.');\n}\n\nreturn [{ json: { newsletterText: textContent } }];"
+      },
+      "id": "extract-text",
+      "name": "Extraire Texte Newsletter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un expert en marketing Instagram pour la finance française. Tu crées des posts Instagram percutants pour La Verticale, newsletter finance destinée aux entrepreneurs et investisseurs français."
+            },
+            {
+              "role": "user",
+              "content": "Transforme le contenu de newsletter suivant en post Instagram de 150 mots maximum.\n\nRègles STRICTES :\n- Commence OBLIGATOIREMENT par une statistique ou un chiffre fort issu du contenu (format: \"X% de...\" ou \"X milliards...\" etc.)\n- Ton direct, professionnel mais accessible, jamais académique\n- Structure : stat d'accroche → contexte (2 phrases max) → insight clé → call-to-action court\n- Termine avec exactement 5 hashtags finance français (ex: #finance #investissement #entrepreneur #économie #LaVerticale)\n- Maximum 150 mots HORS hashtags\n- Pas de phrases génériques comme \"Dans un contexte de...\"\n\nContenu de la newsletter :\n{{ $json.newsletterText }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 400,
+          "temperature": 0.7
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi"
+      },
+      "id": "openai-transform",
+      "name": "OpenAI — Créer Post Instagram",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [900, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "VOTRE_CREDENTIAL_OPENAI_ID",
+          "name": "OpenAI API Key"
+        }
+      },
+      "notes": "Créez une credential 'OpenAI API' dans n8n Settings > Credentials > New > OpenAI API avec votre clé depuis https://platform.openai.com/api-keys"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\n// Compatibilité selon la version du node OpenAI\nlet postText = '';\nif (response.message && response.message.content) {\n  postText = response.message.content;\n} else if (response.choices && response.choices[0]) {\n  postText = response.choices[0].message.content;\n} else if (typeof response === 'string') {\n  postText = response;\n} else {\n  postText = JSON.stringify(response);\n}\n\nconst now = new Date();\n\nreturn [{\n  json: {\n    instagram_caption: postText.trim(),\n    generated_at: now.toISOString(),\n    source: 'newsletter',\n    workflow: 'La Verticale — Newsletter to Instagram'\n  }\n}];"
+      },
+      "id": "format-output",
+      "name": "Formater Résultat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hook.eu1.make.com/VOTRE_WEBHOOK_MAKE_ICI",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"caption\": \"{{ $json.instagram_caption }}\",\n  \"source\": \"newsletter\",\n  \"generated_at\": \"{{ $json.generated_at }}\",\n  \"workflow\": \"newsletter-to-instagram\"\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "send-to-make",
+      "name": "Envoyer vers Make.com",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300],
+      "notes": "Remplacez VOTRE_WEBHOOK_MAKE_ICI par l'URL du webhook créé dans Make.com (voir GUIDE-instagram-make.md, étape 2)"
+    },
+    {
+      "parameters": {
+        "message": "=✅ Post Instagram Newsletter créé et envoyé vers Make.com !\n\nCaption générée :\n{{ $('Formater Résultat').item.json.instagram_caption }}\n\nEnvoyé le : {{ $('Formater Résultat').item.json.generated_at }}"
+      },
+      "id": "success-log",
+      "name": "Log Succès",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "Déclencheur Manuel": {
+      "main": [
+        [
+          {
+            "node": "Récupérer Dernière Édition Beehiiv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Beehiiv (optionnel)": {
+      "main": [
+        [
+          {
+            "node": "Récupérer Dernière Édition Beehiiv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer Dernière Édition Beehiiv": {
+      "main": [
+        [
+          {
+            "node": "Extraire Texte Newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire Texte Newsletter": {
+      "main": [
+        [
+          {
+            "node": "OpenAI — Créer Post Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI — Créer Post Instagram": {
+      "main": [
+        [
+          {
+            "node": "Formater Résultat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formater Résultat": {
+      "main": [
+        [
+          {
+            "node": "Envoyer vers Make.com",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer vers Make.com": {
+      "main": [
+        [
+          {
+            "node": "Log Succès",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "La Verticale"
+    },
+    {
+      "name": "Instagram"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-05-31T00:00:00.000Z",
+  "versionId": "1"
+}

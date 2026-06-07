@@ -1,0 +1,252 @@
+{
+  "name": "La Verticale — Veille Actu → Instagram (Quotidien 7h)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "trigger-cron",
+      "name": "Déclencheur 7h (Lun-Ven)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300],
+      "notes": "Se déclenche du lundi au vendredi à 7h00. Modifiez '1-5' en '*' pour inclure le week-end."
+    },
+    {
+      "parameters": {
+        "url": "https://www.lesechos.fr/rss/rss_une.xml",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "fetch-rss-lesechos",
+      "name": "RSS Les Echos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://rss.bfmtv.com/articles/economie/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "fetch-rss-bfm",
+      "name": "RSS BFM Business",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 420],
+      "notes": "URL RSS BFM Business Economie. Alternative si indisponible : https://rss.bfmtv.com/articles/"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fusion et parsing des flux RSS Les Echos + BFM Business\nconst KEYWORDS = [\n  'investissement', 'opportunité', 'économie', 'entreprise', 'fiscalité',\n  'immobilier', 'bourse', 'startup', 'financement', 'taux', 'inflation',\n  'croissance', 'marché', 'budget', 'impôt', 'CAC', 'PME', 'ETI',\n  'crypto', 'bitcoin', 'banque', 'crédit', 'épargne', 'retraite'\n];\n\nfunction parseRSS(xmlText, sourceName) {\n  const items = [];\n  const itemRegex = /<item>([\\s\\S]*?)<\\/item>/g;\n  let match;\n  while ((match = itemRegex.exec(xmlText)) !== null) {\n    const itemContent = match[1];\n    const titleMatch = itemContent.match(/<title>(?:<!\\[CDATA\\[)?([^\\]<]+)(?:\\]\\]>)?<\\/title>/);\n    const descMatch = itemContent.match(/<description>(?:<!\\[CDATA\\[)?([^\\]<]+)(?:\\]\\]>)?<\\/description>/);\n    const linkMatch = itemContent.match(/<link>([^<]+)<\\/link>/);\n    const pubDateMatch = itemContent.match(/<pubDate>([^<]+)<\\/pubDate>/);\n    \n    if (titleMatch) {\n      items.push({\n        title: titleMatch[1].trim(),\n        description: descMatch ? descMatch[1].trim().substring(0, 200) : '',\n        link: linkMatch ? linkMatch[1].trim() : '',\n        pubDate: pubDateMatch ? pubDateMatch[1].trim() : '',\n        source: sourceName\n      });\n    }\n  }\n  return items.slice(0, 15);\n}\n\nconst inputs = $input.all();\nlet lesEchosXML = '';\nlet bfmXML = '';\n\nfor (const item of inputs) {\n  const data = item.json.data || item.json;\n  if (typeof data === 'string') {\n    if (data.includes('lesechos') || item.json.url && item.json.url.includes('lesechos')) {\n      lesEchosXML = data;\n    } else {\n      bfmXML = data;\n    }\n  }\n}\n\n// Parser les deux flux\nconst lesEchosArticles = parseRSS(lesEchosXML, 'Les Echos');\nconst bfmArticles = parseRSS(bfmXML, 'BFM Business');\n\n// Fusionner et filtrer par mots-clés\nconst allArticles = [...lesEchosArticles, ...bfmArticles];\n\nconst filtered = allArticles.filter(article => {\n  const text = (article.title + ' ' + article.description).toLowerCase();\n  return KEYWORDS.some(kw => text.includes(kw.toLowerCase()));\n});\n\n// Prendre les 5 meilleurs (les plus récents après filtrage)\nconst top5 = filtered.slice(0, 5);\n\nif (top5.length === 0) {\n  // Fallback : prendre les 5 premiers sans filtre\n  const fallback = allArticles.slice(0, 5);\n  const summary = fallback.map((a, i) => `${i+1}. [${a.source}] ${a.title}`).join('\\n');\n  return [{ json: { articlesSummary: summary, count: fallback.length, filtered: false } }];\n}\n\nconst summary = top5.map((a, i) => `${i+1}. [${a.source}] ${a.title}\\n   ${a.description}`).join('\\n\\n');\n\nreturn [{ json: { articlesSummary: summary, count: top5.length, filtered: true } }];"
+      },
+      "id": "filter-articles",
+      "name": "Parser et Filtrer Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un expert en marketing Instagram pour la finance française. Tu crées des posts Instagram percutants pour La Verticale, newsletter finance destinée aux entrepreneurs et investisseurs français. Tu identifies l'information la plus impactante et la transformes en contenu viral."
+            },
+            {
+              "role": "user",
+              "content": "Voici les titres d'actualité économique et finance du jour. Crée UN post Instagram court et percutant sur L'information la plus intéressante pour un entrepreneur français.\n\nRègles STRICTES :\n- Commence OBLIGATOIREMENT par un chiffre, une statistique ou un fait concret\n- 100 mots MAXIMUM (hors hashtags)\n- Ton direct, pas de jargon complexe\n- Structure : chiffre/fait fort → explication simple → pourquoi c'est important pour toi → action/question\n- Exactement 3 hashtags pertinents finance France\n- Pas d'emojis excessifs (max 2)\n\nActualités du jour :\n{{ $json.articlesSummary }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 300,
+          "temperature": 0.75
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi"
+      },
+      "id": "openai-post",
+      "name": "OpenAI — Post Veille Instagram",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [920, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "VOTRE_CREDENTIAL_OPENAI_ID",
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\nlet postText = '';\nif (response.message && response.message.content) {\n  postText = response.message.content;\n} else if (response.choices && response.choices[0]) {\n  postText = response.choices[0].message.content;\n} else if (typeof response === 'string') {\n  postText = response;\n} else {\n  postText = JSON.stringify(response);\n}\n\nconst now = new Date();\nconst dateStr = now.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });\n\nreturn [{\n  json: {\n    instagram_caption: postText.trim(),\n    generated_at: now.toISOString(),\n    date_fr: dateStr,\n    source: 'veille-quotidienne',\n    workflow: 'La Verticale — Veille Instagram'\n  }\n}];"
+      },
+      "id": "format-post",
+      "name": "Formater Post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hook.eu1.make.com/VOTRE_WEBHOOK_MAKE_ICI",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"caption\": \"{{ $json.instagram_caption }}\",\n  \"source\": \"veille-quotidienne\",\n  \"date\": \"{{ $json.date_fr }}\",\n  \"generated_at\": \"{{ $json.generated_at }}\",\n  \"workflow\": \"veille-instagram\"\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "send-to-make",
+      "name": "Envoyer vers Make.com",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1360, 300],
+      "notes": "Remplacez VOTRE_WEBHOOK_MAKE_ICI par l'URL du webhook Make.com (voir GUIDE-instagram-make.md)"
+    },
+    {
+      "parameters": {
+        "message": "=✅ Post Instagram Veille généré et envoyé !\n\nDate : {{ $('Formater Post').item.json.date_fr }}\n\nCaption :\n{{ $('Formater Post').item.json.instagram_caption }}"
+      },
+      "id": "success-log",
+      "name": "Log Succès",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1580, 300]
+    }
+  ],
+  "connections": {
+    "Déclencheur 7h (Lun-Ven)": {
+      "main": [
+        [
+          {
+            "node": "RSS Les Echos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS BFM Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Les Echos": {
+      "main": [
+        [
+          {
+            "node": "Parser et Filtrer Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS BFM Business": {
+      "main": [
+        [
+          {
+            "node": "Parser et Filtrer Articles",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Parser et Filtrer Articles": {
+      "main": [
+        [
+          {
+            "node": "OpenAI — Post Veille Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI — Post Veille Instagram": {
+      "main": [
+        [
+          {
+            "node": "Formater Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formater Post": {
+      "main": [
+        [
+          {
+            "node": "Envoyer vers Make.com",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer vers Make.com": {
+      "main": [
+        [
+          {
+            "node": "Log Succès",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "La Verticale"
+    },
+    {
+      "name": "Instagram"
+    },
+    {
+      "name": "Veille"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-05-31T00:00:00.000Z",
+  "versionId": "1"
+}
