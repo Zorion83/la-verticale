@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr" class="{{body_class}}">
+<head>
+  {{ghost_head}}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{asset "css/main.css"}}" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner container">
+    <a href="{{@site.url}}" class="nav-logo">La <span>Verticale</span></a>
+    <div class="nav-links">
+      <a href="{{@site.url}}">Accueil</a>
+      <a href="{{@site.url}}/tag/analyses/">Analyses</a>
+      <a href="{{@site.url}}/tag/education/">Éducation</a>
+      {{#if @member}}
+        <a href="/account" class="nav-cta">Mon compte</a>
+      {{else}}
+        <a href="#subscribe" class="nav-cta">S'abonner</a>
+      {{/if}}
+    </div>
+  </div>
+</nav>
+
+{{{body}}}
+
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-logo">La <span>Verticale</span></div>
+    <nav class="footer-links" aria-label="Liens footer">
+      <a href="{{@site.url}}">Accueil</a>
+      <a href="{{@site.url}}/tag/analyses/">Analyses</a>
+      <a href="#">Mentions légales</a>
+      <a href="#">Contact</a>
+    </nav>
+    <p class="footer-copy">© {{date format="YYYY"}} La Verticale · Tous droits réservés</p>
+  </div>
+</footer>
+
+{{portal}}
+{{ghost_foot}}
+<script src="{{asset "js/main.js"}}"></script>
+</body>
+</html>

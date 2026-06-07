@@ -1,0 +1,18 @@
+{{!< default}}
+
+<article class="page-full container">
+  <header class="page-header">
+    <h1 class="page-title">{{title}}</h1>
+    {{#if custom_excerpt}}<p class="page-excerpt">{{custom_excerpt}}</p>{{/if}}
+  </header>
+
+  {{#if feature_image}}
+  <figure class="page-image">
+    <img src="{{img_url feature_image size="xl"}}" alt="{{title}}" />
+  </figure>
+  {{/if}}
+
+  <section class="page-content gh-content">
+    {{content}}
+  </section>
+</article>

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Verticale — L'actu qui rapporte</title>
+  <meta name="description" content="La newsletter finance premium pour entrepreneurs et indépendants français. Une opportunité par semaine, à saisir maintenant." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0a;
+      --bg-card:   #111111;
+      --bg-raised: #161616;
+      --gold:      #e8c547;
+      --gold-dim:  #b8992e;
+      --text:      #f0f0f0;
+      --muted:     #888888;
+      --border:    #222222;
+      --radius:    12px;
+      --transition: 0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Scroll-triggered fade-in ─────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── Layout helpers ───────────────────────────────────────── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    section { padding: 80px 0; }
+
+    /* ─── NAV ──────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+    }
+    nav .nav-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold);
+      color: #0a0a0a;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: #f0d060; transform: translateY(-1px); }
+
+    /* ─── HERO ─────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 0 80px;
+      overflow: hidden;
+    }
+
+    /* Mountain silhouette */
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 600' preserveAspectRatio='xMidYMax slice'%3E%3Cpolygon points='0,600 200,300 400,450 600,150 800,350 1050,80 1250,280 1440,180 1440,600' fill='%23111111' opacity='0.55'/%3E%3Cpolygon points='0,600 150,420 350,510 550,310 750,430 1000,220 1200,370 1440,270 1440,600' fill='%230e0e0e' opacity='0.45'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: bottom center;
+      z-index: -1;
+    }
+
+    /* Subtle gold glow at top */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(232,197,71,0.06) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      width: 100%;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232, 197, 71, 0.09);
+      border: 1px solid rgba(232, 197, 71, 0.22);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+    .hero-eyebrow::before { content: '▲'; font-size: 0.55em; }
+
+    .hero-title {
+      font-size: clamp(3rem, 11vw, 6.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .hero-title .gold { color: var(--gold); }
+
+    .hero-tagline {
+      font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 48px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-tagline strong { color: var(--text); font-weight: 600; }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: #0a0a0a;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-primary:hover {
+      background: #f0d060;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(232, 197, 71, 0.22);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .hero-sub { font-size: 0.8rem; color: var(--muted); }
+    .hero-sub span { color: var(--gold); font-weight: 600; }
+
+    /* ─── PROMISE ──────────────────────────────────────────────── */
+    #promise {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .promise-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    @media (min-width: 640px) {
+      .promise-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .promise-card {
+      background: var(--bg-card);
+      padding: 36px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: background var(--transition);
+    }
+    .promise-card:hover { background: var(--bg-raised); }
+
+    .promise-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(232, 197, 71, 0.09);
+      border: 1px solid rgba(232, 197, 71, 0.18);
+      border-radius: 10px;
+      font-size: 1.3rem;
+    }
+
+    .promise-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .promise-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .promise-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ─── CONTENT ───────────────────────────────────────────────── */
+    #content { background: var(--bg); }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    .content-tiers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 640px) {
+      .content-tiers { grid-template-columns: 1fr 1fr; }
+    }
+
+    .tier-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      background: var(--bg-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tier-card.premium {
+      border-color: rgba(232, 197, 71, 0.28);
+      background: linear-gradient(135deg, rgba(232,197,71,0.05) 0%, var(--bg-card) 55%);
+    }
+    .tier-card.premium::before {
+      content: 'PREMIUM';
+      position: absolute;
+      top: 18px;
+      right: -30px;
+      background: var(--gold);
+      color: #0a0a0a;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      padding: 4px 38px;
+      transform: rotate(45deg);
+    }
+
+    .tier-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 18px;
+      display: inline-block;
+    }
+    .tier-badge.free { background: rgba(255,255,255,0.07); color: var(--muted); }
+    .tier-badge.paid { background: rgba(232,197,71,0.13); color: var(--gold); }
+
+    .tier-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .tier-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+    .tier-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    .tier-list li::before {
+      content: '✓';
+      color: var(--gold);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .tier-list li strong { color: var(--text); font-weight: 500; }
+
+    /* ─── SOCIAL PROOF ─────────────────────────────────────────── */
+    #proof {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .proof-number {
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .proof-label {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 52px;
+    }
+
+    .proof-testimonials {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      text-align: left;
+    }
+    @media (min-width: 640px) {
+      .proof-testimonials { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .testimonial {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .testimonial-stars {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .testimonial-text {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .testimonial-author { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+    .testimonial-role   { font-size: 0.75rem; color: var(--muted); }
+
+    /* ─── CTA FINAL ────────────────────────────────────────────── */
+    #cta-final { background: var(--bg); text-align: center; }
+
+    .cta-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: clamp(40px, 8vw, 72px) clamp(24px, 6vw, 64px);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(232,197,71,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-box .section-title { margin-bottom: 10px; }
+    .cta-box .section-sub   { margin: 0 auto 36px; text-align: center; }
+
+    .beehiiv-wrapper { max-width: 480px; margin: 0 auto; }
+
+    /* Fallback form */
+    .fallback-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    @media (min-width: 500px) {
+      .fallback-form { flex-direction: row; }
+    }
+
+    .fallback-form input[type="email"] {
+      flex: 1;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .fallback-form input[type="email"]::placeholder { color: var(--muted); }
+    .fallback-form input[type="email"]:focus { border-color: var(--gold); }
+
+    .fallback-form button {
+      background: var(--gold);
+      color: #0a0a0a;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .fallback-form button:hover { background: #f0d060; transform: translateY(-1px); }
+
+    .cta-fine {
+      margin-top: 16px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .form-success {
+      display: none;
+      padding: 16px 24px;
+      background: rgba(232, 197, 71, 0.08);
+      border: 1px solid rgba(232, 197, 71, 0.28);
+      border-radius: 8px;
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .footer-logo { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.03em; }
+    .footer-logo span { color: var(--gold); }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy { font-size: 0.75rem; color: #444; }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #333; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ NAV ══════════════════════════════════════════════════════ -->
+  <nav aria-label="Navigation principale">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">La <span>Verticale</span></a>
+      <a href="#cta-final" class="nav-cta">S'abonner</a>
+    </div>
+  </nav>
+
+
+  <!-- ══ HERO ═════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-content">
+
+        <div class="hero-eyebrow reveal">Newsletter Finance · Chaque mardi</div>
+
+        <h1 class="hero-title reveal reveal-delay-1">
+          La <span class="gold">Verticale</span>
+        </h1>
+
+        <p class="hero-tagline reveal reveal-delay-2">
+          <strong>Une opportunité par semaine, à saisir maintenant.</strong><br>
+          La newsletter finance pour entrepreneurs et indépendants qui veulent des infos qui rapportent vraiment.
+        </p>
+
+        <div class="hero-actions reveal reveal-delay-3">
+          <a href="#cta-final" class="btn-primary">Je m'abonne gratuitement →</a>
+          <p class="hero-sub">Gratuit · Sans spam · <span>Chaque mardi matin</span></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ PROMISE ══════════════════════════════════════════════════ -->
+  <section id="promise" aria-label="Promesse éditoriale">
+    <div class="container">
+      <div class="promise-grid">
+
+        <div class="promise-card reveal">
+          <div class="promise-icon" aria-hidden="true">⛰️</div>
+          <div class="promise-label">Chaque semaine</div>
+          <div class="promise-title">1 opportunité concrète</div>
+          <p class="promise-desc">Une niche, un dispositif fiscal, un mouvement de marché — décortiqué et mis en perspective pour que tu puisses agir.</p>
+        </div>
+
+        <div class="promise-card reveal reveal-delay-1">
+          <div class="promise-icon" aria-hidden="true">📡</div>
+          <div class="promise-label">L'essentiel filtré</div>
+          <div class="promise-title">3 news actionnables</div>
+          <p class="promise-desc">Les signaux qui comptent, sans le bruit. Macro, régulation, marchés — seulement ce qui impacte ta situation.</p>
+        </div>
+
+        <div class="promise-card reveal reveal-delay-2">
+          <div class="promise-icon" aria-hidden="true">🛠️</div>
+          <div class="promise-label">Gain de temps</div>
+          <div class="promise-title">1 outil pratique</div>
+          <p class="promise-desc">Un template, un simulateur, une ressource libre — quelque chose que tu peux utiliser dans la journée.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ CONTENT ══════════════════════════════════════════════════ -->
+  <section id="content">
+    <div class="container">
+      <span class="section-label reveal">Ce que tu reçois</span>
+      <h2 class="section-title reveal">Deux niveaux. Un seul objectif :<br>que ça te rapporte.</h2>
+      <p class="section-sub reveal">Commence gratuitement. Monte en altitude si tu veux aller plus loin.</p>
+
+      <div class="content-tiers">
+
+        <div class="tier-card reveal">
+          <span class="tier-badge free">Gratuit</span>
+          <div class="tier-title">L'essentiel chaque mardi</div>
+          <ul class="tier-list">
+            <li><strong>L'opportunité de la semaine</strong> — résumée en 3 minutes</li>
+            <li><strong>3 news actionnables</strong> triées sur le volet</li>
+            <li><strong>1 outil ou ressource</strong> immédiatement utilisable</li>
+            <li><strong>Le chiffre de la semaine</strong> — le contexte macro qui compte</li>
+            <li>Accès aux archives publiques</li>
+          </ul>
+        </div>
+
+        <div class="tier-card premium reveal reveal-delay-1">
+          <span class="tier-badge paid">Premium</span>
+          <div class="tier-title">Pour aller jusqu'au sommet</div>
+          <ul class="tier-list">
+            <li>Tout le contenu gratuit, plus :</li>
+            <li><strong>Analyse approfondie</strong> de l'opportunité — chiffres, risques, étapes</li>
+            <li><strong>Portefeuille de suivi</strong> — positions et raisonnement détaillés</li>
+            <li><strong>Archives premium complètes</strong> — toutes les analyses passées</li>
+            <li><strong>Canal Discord privé</strong> — échanges entre lecteurs actifs</li>
+            <li><strong>Q&amp;A mensuel</strong> en direct avec l'auteur</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ SOCIAL PROOF ═════════════════════════════════════════════ -->
+  <section id="proof" aria-label="Preuves sociales">
+    <div class="container">
+
+      <div class="proof-number reveal">2 400+</div>
+      <p class="proof-label reveal">lecteurs nous rejoignent chaque mardi matin</p>
+
+      <div class="proof-testimonials">
+
+        <div class="testimonial reveal">
+          <div class="testimonial-stars" aria-label="5 étoiles">★★★★★</div>
+          <p class="testimonial-text">"La seule newsletter finance que je lis jusqu'au bout. Dense, honnête, actionnable. C'est rare."</p>
+          <div class="testimonial-author">Thomas R.</div>
+          <div class="testimonial-role">Consultant indépendant, Lyon</div>
+        </div>
+
+        <div class="testimonial reveal reveal-delay-1">
+          <div class="testimonial-stars" aria-label="5 étoiles">★★★★★</div>
+          <p class="testimonial-text">"J'ai utilisé l'analyse sur les SCPI du numéro 12 pour réorienter une partie de ma trésorerie. Merci."</p>
+          <div class="testimonial-author">Camille D.</div>
+          <div class="testimonial-role">Fondatrice, e-commerce</div>
+        </div>
+
+        <div class="testimonial reveal reveal-delay-2">
+          <div class="testimonial-stars" aria-label="5 étoiles">★★★★★</div>
+          <p class="testimonial-text">"Le rapport signal/bruit est imbattable. En 10 minutes par semaine je suis mieux informé qu'avant en 2h."</p>
+          <div class="testimonial-author">Alexis M.</div>
+          <div class="testimonial-role">Développeur freelance, Paris</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ CTA FINAL ════════════════════════════════════════════════ -->
+  <section id="cta-final">
+    <div class="container">
+      <div class="cta-box reveal">
+
+        <span class="section-label">Rejoins la verticale</span>
+        <h2 class="section-title">L'actu qui rapporte,<br>dans ta boîte chaque mardi.</h2>
+        <p class="section-sub">Gratuit. Sans engagement. Tu te désinscrits en un clic.</p>
+
+        <div class="beehiiv-wrapper">
+
+          <!-- // BEEHIIV_EMBED_CODE_HERE //
+               ────────────────────────────────────────────────────
+               Remplace le bloc .fallback-form ci-dessous par ton
+               embed Beehiiv pour activer les abonnements.
+
+               Étapes :
+               1. Connecte-toi sur app.beehiiv.com
+               2. Settings → Publication Details → Embed Form
+               3. Copie le code <script> ou <iframe> généré
+               4. Colle-le ici à la place du .fallback-form
+               ────────────────────────────────────────────────────
+          -->
+
+          <div class="fallback-form" id="subscribe-form">
+            <input
+              type="email"
+              id="email-input"
+              placeholder="ton@email.com"
+              autocomplete="email"
+              aria-label="Adresse e-mail"
+              required
+            />
+            <button type="button" onclick="handleSubscribe()">
+              Je m'abonne →
+            </button>
+          </div>
+
+          <div class="form-success" id="form-success" role="alert">
+            ✓ Parfait ! Vérifie ta boîte mail pour confirmer.
+          </div>
+
+          <p class="cta-fine">
+            En t'abonnant tu acceptes de recevoir La Verticale chaque mardi.
+            Désabonnement possible à tout moment en un clic.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ FOOTER ════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+
+      <div class="footer-logo">La <span>Verticale</span></div>
+
+      <nav class="footer-links" aria-label="Liens footer">
+        <a href="#cta-final">Se désinscrire</a>
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <p class="footer-copy">
+        © 2026 La Verticale · Tous droits réservés ·
+        SIRET&nbsp;: [X&nbsp;XXX&nbsp;XXX&nbsp;XXX&nbsp;XXXXX]
+      </p>
+
+    </div>
+  </footer>
+
+
+  <!-- ══ SCRIPTS ════════════════════════════════════════════════════ -->
+  <script>
+    /* ── Fade-in on scroll via IntersectionObserver ── */
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+
+      const io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      els.forEach(function (el) { io.observe(el); });
+
+      /* Reveal anything already visible on first load */
+      setTimeout(function () {
+        els.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight) el.classList.add('visible');
+        });
+      }, 80);
+    })();
+
+
+    /* ── Fallback form handler (bypassed once Beehiiv embed is wired) ── */
+    function handleSubscribe() {
+      var input   = document.getElementById('email-input');
+      var form    = document.getElementById('subscribe-form');
+      var success = document.getElementById('form-success');
+      var email   = input ? input.value.trim() : '';
+      var re      = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!re.test(email)) {
+        input.style.borderColor = '#e85447';
+        input.focus();
+        setTimeout(function () { input.style.borderColor = ''; }, 2000);
+        return;
+      }
+
+      form.style.display    = 'none';
+      success.style.display = 'block';
+
+      /* Uncomment to POST to a custom endpoint:
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      }); */
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var input = document.getElementById('email-input');
+      if (input) {
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') handleSubscribe();
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

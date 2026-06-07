@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  {{ghost_head}}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{statusCode}} — La Verticale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{asset "css/main.css"}}" />
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="{{@site.url}}" class="nav-logo">La <span>Verticale</span></a>
+      <a href="{{@site.url}}" class="nav-cta">Accueil</a>
+    </div>
+  </nav>
+  <section style="min-height:80vh;display:flex;align-items:center;text-align:center;">
+    <div class="container">
+      <div class="hero-eyebrow">Erreur {{statusCode}}</div>
+      <h1 class="hero-title" style="font-size:clamp(2rem,8vw,4rem);margin-top:24px;">{{message}}</h1>
+      <p class="hero-tagline" style="margin-top:16px;">Cette page n'existe pas ou a été déplacée.</p>
+      <div style="margin-top:32px;">
+        <a href="{{@site.url}}" class="btn-primary">← Retour à l'accueil</a>
+      </div>
+    </div>
+  </section>
+  {{ghost_foot}}
+</body>
+</html>

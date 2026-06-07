@@ -1,0 +1,72 @@
+{{!< default}}
+
+<article class="post-full {{post_class}}">
+
+  <header class="post-full-header">
+    <div class="container">
+      {{#if primary_tag}}
+      <a href="{{primary_tag.url}}" class="post-tag">{{primary_tag.name}}</a>
+      {{/if}}
+      <h1 class="post-full-title">{{title}}</h1>
+      {{#if custom_excerpt}}
+      <p class="post-full-excerpt">{{custom_excerpt}}</p>
+      {{/if}}
+      <div class="post-full-meta">
+        {{#if authors}}
+        <span>Par
+          {{#foreach authors}}{{name}}{{#unless @last}}, {{/unless}}{{/foreach}}
+        </span>
+        <span>·</span>
+        {{/if}}
+        <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="D MMM YYYY"}}</time>
+        <span>·</span>
+        <span>{{reading_time}}</span>
+      </div>
+    </div>
+  </header>
+
+  {{#if feature_image}}
+  <figure class="post-full-image">
+    <img src="{{img_url feature_image size="xl"}}" alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}" />
+    {{#if feature_image_caption}}<figcaption>{{feature_image_caption}}</figcaption>{{/if}}
+  </figure>
+  {{/if}}
+
+  <div class="post-full-content container">
+    <section class="post-content gh-content">
+      {{content}}
+    </section>
+
+    {{#unless access}}
+    <section id="subscribe" class="paywall-subscribe">
+      <div class="subscribe-box">
+        <span class="section-label">Contenu Premium</span>
+        <h2 class="section-title">Continue la lecture</h2>
+        <p class="section-sub">Abonne-toi pour accéder à l'analyse complète.</p>
+        <form data-members-form="subscribe" class="subscribe-form">
+          <input type="email" data-members-email placeholder="ton@email.com" required autocomplete="email" />
+          <button type="submit">Accéder gratuitement →</button>
+          <p data-members-error class="form-error" style="display:none;"></p>
+          <p data-members-success class="form-success" style="display:none;">✓ Vérifie ta boîte mail !</p>
+        </form>
+      </div>
+    </section>
+    {{/unless}}
+  </div>
+
+  <footer class="post-full-footer container">
+    {{#if tags}}
+    <div class="post-tags">
+      {{#foreach tags}}
+      <a href="{{url}}" class="tag-pill">{{name}}</a>
+      {{/foreach}}
+    </div>
+    {{/if}}
+
+    <div class="post-nav">
+      {{#prev_post}}<a href="{{url}}" class="post-nav-prev">← {{title}}</a>{{/prev_post}}
+      {{#next_post}}<a href="{{url}}" class="post-nav-next">{{title}} →</a>{{/next_post}}
+    </div>
+  </footer>
+
+</article>

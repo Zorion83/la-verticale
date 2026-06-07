@@ -1,0 +1,37 @@
+{{!< default}}
+
+<section class="tag-archive">
+  <div class="container">
+    <header class="tag-header">
+      {{#if tag.feature_image}}
+      <img src="{{tag.feature_image}}" alt="{{tag.name}}" class="tag-image" />
+      {{/if}}
+      <span class="section-label">Rubrique</span>
+      <h1 class="section-title">{{tag.name}}</h1>
+      {{#if tag.description}}<p class="section-sub">{{tag.description}}</p>{{/if}}
+    </header>
+
+    <div class="posts-grid">
+      {{#foreach posts}}
+      <article class="post-card">
+        {{#if feature_image}}
+        <a href="{{url}}" class="post-card-image-link">
+          <img src="{{img_url feature_image size="m"}}" alt="{{title}}" class="post-card-image" loading="lazy" />
+        </a>
+        {{/if}}
+        <div class="post-card-content">
+          <h2 class="post-card-title"><a href="{{url}}">{{title}}</a></h2>
+          <p class="post-card-excerpt">{{excerpt words="25"}}</p>
+          <div class="post-card-meta">
+            <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="D MMM YYYY"}}</time>
+            <span>·</span>
+            <span>{{reading_time}}</span>
+          </div>
+        </div>
+      </article>
+      {{/foreach}}
+    </div>
+
+    {{pagination}}
+  </div>
+</section>
